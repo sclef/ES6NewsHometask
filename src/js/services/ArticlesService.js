@@ -1,52 +1,21 @@
-import Utils from './Utils.js';
+import 'url-polyfill';
+import Utils from '../core/Utils.js';
+import Constants from '../core/Constants.js';
 
-class NewsRetriever {
+class ArticlesService {
     constructor() {
-        this.ApiKey = 'e03d718829c24339b5ea62712a181aae';
     }
 
     getNews(source) {
         let urls = source.map(s => {
-            let SourceUrl = new URL('https://newsapi.org/v1/articles');
-            let params = { source: s, apiKey: this.ApiKey };
+            let SourceUrl = new URL(Constants.ArticlesUrl);
+            let params = { source: s, apiKey: Constants.ApiKey };
 
             Object.keys(params).forEach(key => SourceUrl.searchParams.append(key, params[key]))
             return SourceUrl;
         });
 
         Utils.sendRequestForJson(urls, this.showNews);
-
-    }
-
-    getAllSouces() {
-        const allSourcesUrl = 'https://newsapi.org/v1/sources';
-        Utils.sendRequestForJson([allSourcesUrl], this.fillMenu);
-    }
-
-    fillMenu(resp) {
-        let uniqueCategories = function (item, index, self) {
-            return self.indexOf(item) === index;
-        };
-
-        let categories = resp[0].sources.map(a => a.category).filter(uniqueCategories);
-
-        for (let i = 0; i < categories.length; i++) {
-            let cat = categories[i];
-            let catResources = resp[0].sources.filter(r => r.category === cat);
-            let categoryOptions = '';
-
-            for (let j = 0; j < catResources.length; j++) {
-                categoryOptions = categoryOptions.concat(`<div><input class='source-checkbox' type='checkbox' id='${catResources[j].id}'/><label for='${catResources[j].id}'>${catResources[j].name}</label></div>`)
-            }
-
-            let categoryTemplate = document.createElement("div");
-            categoryTemplate.id = `${cat}-select`;
-            categoryTemplate.className = 'category-selection';
-            categoryTemplate.innerHTML = categoryOptions;
-
-            document.getElementById("table-headers").appendChild(document.createElement("td")).append(cat.toUpperCase());
-            document.getElementById("table-options").appendChild(document.createElement("td")).appendChild(categoryTemplate);
-        }
 
     }
 
@@ -101,4 +70,4 @@ class NewsRetriever {
     }
 }
 
-export default NewsRetriever;
+export default ArticlesService;
