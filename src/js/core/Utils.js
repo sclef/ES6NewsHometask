@@ -1,19 +1,26 @@
 import 'whatwg-fetch';
 import 'es6-promise-promise';
 import "@babel/polyfill";
+import UrlFactory from '../core/UrlFactory.js';
 
 class Utils {
     async sendRequestForJson(urls, callbackFunction) {
-        let promises = await urls.map(await this.asyncFetch);
-        Promise.all(promises)
-            .then(callbackFunction)
-            .catch(error => console.error(error))
-            .finally(() => console.log("request was sent"));
+        await urls.map(async (url) => { await this.proxyFetch(url, callbackFunction); });
     }
 
-    async asyncFetch(url) {
-        let response = await fetch(url);
-        return response.json();
+    async proxyFetch(url, callbackFunction) {
+        let urlFactory = new UrlFactory();
+        let UrlType = await urlFactory.runRequest(url, callbackFunction);
+        console.log(UrlType);
+        if (typeof url === "object") {
+            //Object.entries will not get prototipe properties
+            for (var prop in url) {
+                console.log("obj." + prop + " = " + url[prop]);
+            }
+        } else {
+            console.log(url);
+        }
     }
 }
+
 export default Utils;
