@@ -5,7 +5,7 @@ var webpackConfig = require('./webpack.common.js');
 module.exports = function (config) {
     config.set({
         files: [
-            'src/**/*.js',
+            'src/js/**/*.js',
             'test/**/*.js'
         ],
 
@@ -31,6 +31,9 @@ module.exports = function (config) {
 
         frameworks: ['jasmine'],
         browsers: ['Chrome'],
-        singleRun: true
+        singleRun: true,
+        exclude : [
+            'src/js/Main.js'
+        ]
     });
 };

@@ -6,7 +6,7 @@ __webpack_public_path__ = "public/js/";
 
 const sources = new Sources();
 sources.getAllSouces();
-
+debugger;
 document.getElementById('apply-filters').addEventListener("click", () => {
   //import(/* webpackChunkName: "ArticlesService" */'./services/ArticlesService.js').then(module => {
     console.log('articles loaded');
